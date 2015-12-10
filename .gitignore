@@ -26,3 +26,6 @@
 *.exe
 *.out
 *.app
+
+# Benchmarking results
+callgrind.out.*
