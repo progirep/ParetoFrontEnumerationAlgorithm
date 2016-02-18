@@ -17,7 +17,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Ruediger Ehlers
+ * Copyright (c) 2015-2016 Ruediger Ehlers
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@
 namespace paretoenumerator {
 
     // Main function
-    std::list<std::vector<int> > enumerateParetoFront(std::function<bool(const std::vector<int> &)> fn, std::vector<std::pair<int,int> > limits);
+    std::list<std::vector<int> > enumerateParetoFront(std::function<bool(const std::vector<int> &)> fn, const std::vector<std::pair<int,int> > &limits);
 
     // Additional functions that will remain stable and may be useful for some applications
     std::list<std::vector<int> > cleanParetoFront(const std::list<std::vector<int> > &input);

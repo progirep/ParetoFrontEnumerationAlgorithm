@@ -185,7 +185,7 @@ void doRandomTest(unsigned int randomSeed) {
 //=================================================================================
 int main(int nofArgs, const char **args) {
     try {
-        unsigned int randomSeed = std::random_device{}();
+        unsigned int randomSeed;
         if (nofArgs>1) {
             std::istringstream is(args[1]);
             is >> randomSeed;
@@ -193,6 +193,8 @@ int main(int nofArgs, const char **args) {
                 std::cerr << "Error: Expect at most one parameter: the random seed to random testing, which must be an integer." << std::endl;
                 return 1;
             }
+        } else {
+            randomSeed = std::random_device{}();
         }
         std::cout << "Random Seed: " << randomSeed << "\nTest progress: ";
 

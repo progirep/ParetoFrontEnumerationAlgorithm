@@ -16,7 +16,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Ruediger Ehlers
+ * Copyright (c) 2015-2016 Ruediger Ehlers
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +41,7 @@ namespace paretoenumerator {
 
     inline bool vectorOfIntIsSmaller(const std::vector<int>& a, const std::vector<int> &b) {
         const size_t size = a.size();
-        for (size_t i = 0; i<size;i++) {
+        for (size_t i = 0;i<size;i++) {
             if (b[i]<a[i]) return false;
             if (b[i]!=a[i]) {
                 // We continue the outer loop now here as this is
@@ -58,7 +58,7 @@ namespace paretoenumerator {
 
     bool vectorOfIntIsLeq(const std::vector<int>& a, const std::vector<int> &b) {
         const size_t size = a.size();
-        for (size_t i = 0; i<size;i++) {
+        for (size_t i = 0;i<size;i++) {
             if (b[i]<a[i]) return false;
         }
         return true;
@@ -71,9 +71,9 @@ namespace paretoenumerator {
      */
     std::list<std::vector<int> > cleanParetoFront(const std::list<std::vector<int> > &input) {
         std::list<std::vector<int> > cleanedElements;
-        for (auto &it : input) {
+        for (auto const &it : input) {
             bool foundSmaller = false;
-            for (auto &it2 : input) {
+            for (const auto &it2 : input) {
                 if (vectorOfIntIsSmaller(it,it2)) {
                     foundSmaller = true;
                     break;
@@ -95,7 +95,7 @@ namespace paretoenumerator {
         std::list<std::vector<int> > oldValueBuffer;
     public:
         bool isContained(const std::vector<int> &data) {
-            for (auto &a : oldValueBuffer) {
+            for (auto const &a : oldValueBuffer) {
                 if (vectorOfIntIsLeq(data,a)) return true;
             }
             return false;
@@ -120,10 +120,10 @@ namespace paretoenumerator {
      * @param limits the upper and lower bounds of the objective values. In every pair, the minimal value comes first.
      * @return the list of Pareto points.
      */
-    std::list<std::vector<int> > enumerateParetoFront(std::function<bool(const std::vector<int> &)> fn, std::vector<std::pair<int,int> > limits) {
+    std::list<std::vector<int> > enumerateParetoFront(std::function<bool(const std::vector<int> &)> fn, const std::vector<std::pair<int,int> > &limits) {
 
         // Buffer the number of dimensions of the search space
-        unsigned int nofDimensions = limits.size();
+        unsigned const int nofDimensions = limits.size();
 
         // Reserve the sets "P" and "S" from the paper
         std::list<std::vector<int> > paretoFront;
@@ -133,14 +133,16 @@ namespace paretoenumerator {
         NegativeResultBuffer negativeResultBuffer;
 
         // Add the maximal element to the coParetoElements
-        std::vector<int> maximalElement;
-        for (auto i : limits) {
-            maximalElement.push_back(i.second);
+        {
+            std::vector<int> maximalElement;
+            for (auto const i : limits) {
+                maximalElement.push_back(i.second);
+            }
+            coParetoElements.push_back(maximalElement);
         }
-        coParetoElements.push_back(maximalElement);
 
         // Main loop
-        while (coParetoElements.size()>0) {
+        while (!coParetoElements.empty()) {
             std::vector<int> &testPoint = coParetoElements.front();
             if (!(negativeResultBuffer.isContained(testPoint))) {
                 if (fn(testPoint)) {
@@ -171,7 +173,7 @@ namespace paretoenumerator {
 
                     // Now update all points in the coParetoFront
                     std::list<std::vector<int> > coParetoElementsMod;
-                    for (auto &y : coParetoElements) {
+                    for (auto const &y : coParetoElements) {
                         if (!vectorOfIntIsLeq(x,y)) {
                             coParetoElementsMod.push_back(y);
                         } else {
